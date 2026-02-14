@@ -40,6 +40,42 @@ class GovernancePolicy:
             f"require_human_approval={self.require_human_approval!r})"
         )
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, GovernancePolicy):
+            return NotImplemented
+        return (
+            self.max_tokens == other.max_tokens
+            and self.max_tool_calls == other.max_tool_calls
+            and self.allowed_tools == other.allowed_tools
+            and self.blocked_patterns == other.blocked_patterns
+            and self.require_human_approval == other.require_human_approval
+            and self.timeout_seconds == other.timeout_seconds
+            and self.confidence_threshold == other.confidence_threshold
+            and self.drift_threshold == other.drift_threshold
+            and self.log_all_calls == other.log_all_calls
+            and self.checkpoint_frequency == other.checkpoint_frequency
+            and self.max_concurrent == other.max_concurrent
+            and self.backpressure_threshold == other.backpressure_threshold
+        )
+
+    def __hash__(self) -> int:
+        return hash(
+            (
+                self.max_tokens,
+                self.max_tool_calls,
+                tuple(self.allowed_tools),
+                tuple(self.blocked_patterns),
+                self.require_human_approval,
+                self.timeout_seconds,
+                self.confidence_threshold,
+                self.drift_threshold,
+                self.log_all_calls,
+                self.checkpoint_frequency,
+                self.max_concurrent,
+                self.backpressure_threshold,
+            )
+        )
+
     def __post_init__(self):
         """Validate policy fields on construction."""
         self.validate()
